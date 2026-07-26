@@ -5,4 +5,5 @@ bcrypt
 pwdlib
 pyjwt[argon2]
 pymongo
+dnspython
 python-dotenv

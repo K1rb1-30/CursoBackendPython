@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from routers import products, users, jwt_auth_users, basic_auth_users, users_db
 from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
@@ -15,7 +16,9 @@ app.include_router(users_db.router)
 
 
 #Archivos estaticos
-app.mount("/static", StaticFiles(directory="static"), name="static")
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+if os.path.isdir(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
 async def root():

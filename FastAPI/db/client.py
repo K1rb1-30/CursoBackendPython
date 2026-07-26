@@ -5,22 +5,25 @@
 #db_client = MongoClient("mongodb+srv://customdrago11_db_user:test@cluster0.pj5iijy.mongodb.net/?appName=Cluster0").local
 
 
+import os
+
+from dotenv import load_dotenv
+from fastapi import HTTPException, status
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
-
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
 
 uri = os.getenv("MONGODB_URI")
+db_name = os.getenv("MONGODB_DB_NAME", "test")
+mongo_client = MongoClient(uri, server_api=ServerApi("1")) if uri else None
 
-# Create a new client and connect to the server
-db_client = MongoClient(uri, server_api=ServerApi('1')).test
 
-# Send a ping to confirm a successful connection
-try:
-    db_client.client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
+def get_users_collection():
+    if mongo_client is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="MONGODB_URI no configurada",
+        )
+
+    return mongo_client[db_name]["users"]

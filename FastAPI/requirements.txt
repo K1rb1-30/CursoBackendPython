@@ -2,7 +2,7 @@ fastapi[standard]
 python-jose
 passlib
 bcrypt
-pwdlib
+pwdlib[argon2]
 pyjwt[argon2]
 pymongo
 dnspython
